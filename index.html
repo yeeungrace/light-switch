@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="https://use.typekit.net/gkf0cfg.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light Switch</title>
+     <style>
+        body {
+            font-family: "jaf-mashine", sans-serif;
+            font-weight: 700;
+            font-style: normal;
+            text-align: center;
+            transition: background-color 0.5s, color 0.5s;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;        
+        }
+        h1{font-size: 4rem}
+        
+        div{padding: 30px;}
+
+        .on {
+            background-color: white;
+            color: black;
+            background-image: url('cloud-bg.png');
+            background-repeat: repeat-x;
+            background-position: 0 0;
+            background-size: cover;
+            animation: moveBg 20s linear infinite;
+        }
+        .off {
+            background-color: black;
+            color: white;
+            background-image: none; 
+        }
+        img {
+            cursor: pointer;
+            width: 150px;
+        }
+        .lgt {
+             position: absolute;
+            transition: left 2s ease-in-out, top 2s ease-in-out;
+        }
+       
+button {font-family: "jaf-mashine", sans-serif;
+            margin:10px;
+            font-weight: 700;
+            font-style: normal;
+            font-size: 2rem;
+            background-color: white;
+            color:black;
+            border-style: solid;
+            border-width: 2.5px;
+            border-radius: 5%;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 1 rem;
+        }
+ 
+        @keyframes moveBg {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: -2000px 0;
+            }
+        }
+          .size-control {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body class="on">
+    <h1 id="statusText">TURN OFF THE LIGHT</h1>
+    <img id="toggleImage" src="on-white.png" alt="light-on" onclick="toggleState()">
+
+        <footer>
+            <button id="musicButton" onclick="toggleMusic()">Play Music</button>
+        <p>Designed by Yeeun Shin</p>
+    </footer>
+    <script type="text/javascript">
+
+         const switchSound = new Audio('light-switch.mp3');
+         const backgroundMusic = new Audio('background-music.mp3');
+        backgroundMusic.loop = true; 
+
+        function toggleState() {
+            const body = document.body;
+            const img = document.getElementById('toggleImage');
+            const text = document.getElementById('statusText');
+
+        switchSound.play();
+
+            if (body.classList.contains('on')) {
+                // 'off' 상태로 변경
+                body.classList.replace('on', 'off');
+                img.src = 'off-black.png';
+                img.alt = 'light-off';
+                     text.textContent = 'CATCH THE LIGHTS';
+
+          
+                activateImageEffect();
+            } else {
+                // 'on' 상태로 변경
+                body.classList.replace('off', 'on');
+                img.src = 'on-white.png';
+                img.alt = 'light-on';
+   text.textContent = 'TURN OFF THE LIGHT';
+
+                clearImages();
+            }
+        }
+
+ function toggleMusic() {
+            const musicButton = document.getElementById('musicButton');
+
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                musicButton.textContent = 'Stop Music';
+            } else {
+                backgroundMusic.pause();
+                musicButton.textContent = 'Play Music';
+            }
+        }
+        function activateImageEffect() {
+            var a = ["lgt1", "lgt2", "lgt3", "lgt4", "lgt5"];
+ 
+ for (var i = 0; i < 100; i++) {
+                var t = document.createElement("img");
+                t.src = a[randomBH(0, 4)] + ".png";
+                t.className = "lgt";
+                t.style.width = randomBH(20, 80) + "px";
+                t.style.height = "auto";
+                t.style.left = Math.random() * (window.innerWidth - t.offsetWidth) + "px";
+                t.style.top = Math.random() * (window.innerHeight - t.offsetHeight) + "px";
+                document.body.appendChild(t);
+                moveRandomly(t);
+
+                  // Add click event to remove image on click
+                t.addEventListener('click', function() {
+                    this.remove(); // Remove the clicked image
+                });
+            }
+        }
+ function moveRandomly(element) {
+            setInterval(() => {
+                const newLeft = Math.random() * (window.innerWidth - element.offsetWidth) + "px";
+                const newTop = Math.random() * (window.innerHeight - element.offsetHeight) + "px";
+                element.style.left = newLeft;
+                element.style.top = newTop;
+            }, 2000);  
+        }
+
+        function randomBH(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function clearImages() {
+            const images = document.querySelectorAll('.lgt');
+            images.forEach(img => img.remove());
+        }
+    </script>
+</body>
+</html>
