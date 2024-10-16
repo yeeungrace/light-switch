@@ -69,7 +69,18 @@ footer {
         text-align: center;
         font-size: 1 rem;
         }
- 
+   #info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            color: black;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
         @keyframes moveBg {
             0% {
                 background-position: 0 0;
@@ -78,53 +89,59 @@ footer {
                 background-position: -2000px 0;
             }
         }
-          .size-control {
-            margin-top: 20px;
-        }
+        
     </style>
 </head>
 <body class="on">
     <h1 id="statusText">TURN OFF THE LIGHT</h1>
     <img id="toggleImage" src="on-white.png" alt="light-on" onclick="toggleState()">
+ <div id="info">
+        Clicked: <span id="clickedCount">0</span><br>
+        Time: <span id="timer">0</span> seconds
+    </div>
 
-        <footer>
-            <button id="musicButton" onclick="toggleMusic()">Play Music</button>
+    <footer>
+        <button id="musicButton" onclick="toggleMusic()">Play Music</button>
         <p>Designed by Yeeun Shin</p>
     </footer>
+
     <script type="text/javascript">
 
-         const switchSound = new Audio('light-switch.mp3');
-         const backgroundMusic = new Audio('background-music.mp3');
+        const switchSound = new Audio('light-switch.mp3');
+        const backgroundMusic = new Audio('background-music.mp3');
         backgroundMusic.loop = true; 
+
+        let clickCount = 0;
+        let timerInterval;
+        let timeSpent = 0;
 
         function toggleState() {
             const body = document.body;
             const img = document.getElementById('toggleImage');
             const text = document.getElementById('statusText');
 
-        switchSound.play();
+            switchSound.play();
 
             if (body.classList.contains('on')) {
-                // 'off' 상태로 변경
                 body.classList.replace('on', 'off');
                 img.src = 'off-black.png';
                 img.alt = 'light-off';
-                     text.textContent = 'CATCH THE LIGHT';
+                text.textContent = 'CATCH THE LIGHT';
 
-          
-                activateImageEffect();
+                activateImageEffect(); // Activate images when turning on
+                startTimer(); // Start the timer
+
             } else {
-                // 'on' 상태로 변경
                 body.classList.replace('off', 'on');
                 img.src = 'on-white.png';
                 img.alt = 'light-on';
-   text.textContent = 'TURN OFF THE LIGHT';
-
-                clearImages();
+                text.textContent = 'TURN OFF THE LIGHT';
+                clearImages(); // Clear images when turning off
+                stopTimer(); // Stop the timer
             }
         }
 
- function toggleMusic() {
+        function toggleMusic() {
             const musicButton = document.getElementById('musicButton');
 
             if (backgroundMusic.paused) {
@@ -135,10 +152,11 @@ footer {
                 musicButton.textContent = 'Play Music';
             }
         }
+
         function activateImageEffect() {
             var a = ["lgt1", "lgt2", "lgt3", "lgt4", "lgt5"];
  
- for (var i = 0; i < 100; i++) {
+            for (var i = 0; i < 100; i++) {
                 var t = document.createElement("img");
                 t.src = a[randomBH(0, 4)] + ".png";
                 t.className = "lgt";
@@ -149,13 +167,17 @@ footer {
                 document.body.appendChild(t);
                 moveRandomly(t);
 
-                  // Add click event to remove image on click
+                // Add click event to remove image on click
                 t.addEventListener('click', function() {
                     this.remove(); // Remove the clicked image
+                    clickCount++;
+                    document.getElementById('clickedCount').textContent = clickCount; // Update clicked count
+                    checkImages(); // Check if all images are removed
                 });
             }
         }
- function moveRandomly(element) {
+
+        function moveRandomly(element) {
             setInterval(() => {
                 const newLeft = Math.random() * (window.innerWidth - element.offsetWidth) + "px";
                 const newTop = Math.random() * (window.innerHeight - element.offsetHeight) + "px";
@@ -173,6 +195,27 @@ footer {
         function clearImages() {
             const images = document.querySelectorAll('.lgt');
             images.forEach(img => img.remove());
+        }
+
+        function startTimer() {
+            timeSpent = 0; // Reset time
+            document.getElementById('timer').textContent = timeSpent; // Update timer display
+
+            timerInterval = setInterval(() => {
+                timeSpent++;
+                document.getElementById('timer').textContent = timeSpent; // Update timer display
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function checkImages() {
+            const images = document.querySelectorAll('.lgt');
+            if (images.length === 0) {
+                stopTimer(); // Stop the timer when all images are removed
+            }
         }
     </script>
 </body>
