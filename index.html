@@ -97,7 +97,7 @@ footer {
     <img id="toggleImage" src="on-white.png" alt="light-on" onclick="toggleState()">
  <div id="info">
         Clicked: <span id="clickedCount">0</span><br>
-        Time: <span id="timer">0</span> seconds
+        Time: <span id="timer">0</span> s
     </div>
 
     <footer>
@@ -138,6 +138,8 @@ footer {
                 text.textContent = 'TURN OFF THE LIGHT';
                 clearImages(); // Clear images when turning off
                 stopTimer(); // Stop the timer
+                clickCount = 0; // Reset click count
+                document.getElementById('clickedCount').textContent = clickCount;
             }
         }
 
